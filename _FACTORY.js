@@ -1,8 +1,4 @@
-import { hashtags } from '../data.js';
-import { settings } from '../../settings.js';
-import rawTweets from './_REVERSE.js';
-
-export const tweetifier = (string, data) => {
+const tweetifier = (string, data) => {
   var allGood = true;
   var tweetAnalytics = {};
   let arr = string.split("\n");
@@ -20,22 +16,28 @@ export const tweetifier = (string, data) => {
     tweet.split(" ").forEach((word) => {
       if (word[0] === "#") tweetAnalytics[idx].integratedHashes.push(word);
     });
-    if (factorySettings.filterHash && integratedHashes.length > 0) {
-      tweet
+    // console.log(tweetAnalytics[idx].integratedHashes.length) //DEBUG
+    if (
+      factorySettings.filterHash &&
+      tweetAnalytics[idx].integratedHashes.length > 0
+    ) {
+      tweet = tweet
         .split(" ")
         .filter((word) => word[0] !== "#")
         .join(" ");
     }
+    // console.log(tweet) //DEBUG
     return tweet;
   });
 
-  console.log(arr);
+  // console.log(arr); //DEBUG
 
   arr.forEach((tweet, idx) => {
     var charCount = 278 - tweet.length - data.hashtags.length;
     console.log(`#${idx} '${tweet.slice(0, 10)}...'`, charCount);
     if (charCount < 0) allGood = false;
   });
+
   if (!allGood) return;
 
   arr = arr.map((tweet, idx) => {
@@ -48,7 +50,7 @@ export const tweetifier = (string, data) => {
     tweet = tweet
       .split(" ")
       .filter((word) => {
-        if (word.slice(0, 6) === "https:") {
+        if (word.slice(0, 4) === "http") {
           object.link = "\n" + word;
           return;
         }
@@ -63,7 +65,12 @@ export const tweetifier = (string, data) => {
       if (tweetAnalytics[idx].integratedHashes.length == 0) {
         object.tweetData.hashtags = ` ${data.hashtags[0]} ${data.hashtags[1]} `;
       } else if (tweetAnalytics[idx].integratedHashes.length == 1) {
-        object.tweetData.hashtags = " " + data.hashtags[data.hashtags[0] !== tweetAnalytics[idx].integratedHashes[0] ? 0 : 1] + " ";
+        object.tweetData.hashtags =
+          " " +
+          data.hashtags[
+            data.hashtags[0] !== tweetAnalytics[idx].integratedHashes[0] ? 0 : 1
+          ] +
+          " ";
       } else {
         object.tweetData.hashtags = "";
       }
@@ -79,38 +86,66 @@ export const tweetifier = (string, data) => {
   // console.log(tweetAnalytics);
 };
 
-var newTweets = `How long can Turkey hide the fact that it is spending far beyond its means? Turkey has spent more than it should and done it by hiding the costs deep in its financial system, only visible to committed financial sleuths. Erdogan’s economic coverup is about to be exposed.
+var newTweets = `Azerbaijan, a country with a "tentative" list of @UNESCO World Heritage listed sites is currently destroying & vandalising 60 pieces of Armenian historical & cultural heritage, 45 of which are older than Azerbaijan itself #PreserveArtsakh #RecognizeArtsakh
 
-Erdogan, shocked at how little hard cash was left in Turkey’s central bank, fired his hand picked central bank governor Uysal. Turkey’s central bank was spending money trying to protect its failing lira.
+Cultural erasure is Azeri govt’s goals. When orgs like @UNESCO make partnerships with Azerbaijan, they help a regime erase Armenia from world history #RecognizeArtsakh #PreserveArtsakh https://hyperallergic.com/601492/google-arts-culture-as-an-agent-of-ethnic-cleansing/ 
 
-Turkey’s ministry of treasury, Albayrak, resigned via Instagram and deleted his Twitter account. Albayrak is Erdogan’s son-in-law.
+Our heritage is your history & right now it is in the line of fire. @UNESCO @ICOMOS @GlobalHeritage @SavingPlaceshttps://www.theartnewspaper.com/news/monuments-in-line-of-fire-in-nagorno-karabakh-conflict?fbclid=IwAR0rosofC-QVA3i398cNoFedWZJAh5Wfh1gqD7KDHfPb4GpWpR_z3sGgkOw
 
-The EU imposed sanctions on Turkey for its illegal drilling in the Mediterranean Sea. France has demanded a bolder policy against Turkey. All this is bad news for Turkey because the worsen tensions between Europe and Turkey. 
+In February 2017, President Aliyev appointed his wife Mehriban Aliyeva as the first vice president of Azerbaijan. #StopAliyev
 
-Turkish lira is one of the most volatile and vulnerable currencies in the world. Covid-19 has pushed the lira to a record low, down by roughly 50% against the US $ and 56 percent against the €. 
+Recent changes in the Azerbaijani Bar Association and amendments to the law on representation added to the plight of the rule of law in the country. #StopAliyev
 
-Erdogan has  jailed political opponents, which has lead to stifling pluralism and limiting freedom of political debate, a core component of a democratic society. 
+Mehriban Aliyeva's appointment as @UNESCO Goodwill Ambassador contradicts her husband's campaign of cultural genocide in Artsakh. #StopAliyev #RecognizeArtsakh https://www.theguardian.com/artanddesign/2019/mar/01/monumental-loss-azerbaijan-cultural-genocide-khachkars
 
-Turkey has removed over 30 Turkish judges and prosecutors leading to self-censorship in the judiciary, further undermining Turkey’s independence and impartiality. 
+@UNESCO should not reward a dictatorship that uses nepotism to make up its govt, revoke the title of UNESCO Goodwill Ambassador from Mehriban Aliyeva #StopAliyev #RecognizeArtsakh
 
-President Aliyev was elected to a fourth term in 2018 amid electoral fraud. Azerbaijan’s corrupt and inefficient judiciary is subject to political pressure, and outcomes frequently appear to be predetermined. 
+Wife of dictator, Mehriban Aliyeva, a @UNESCO Goodwill Ambassador... meanwhile her husband orders Azerbaijani forces to target civilians in Artsakh? #StopAliyev #RecognizeArtsakh theguardian.com/artanddesign/2019/mar/01/monumental-loss-azerbaijan-cultural-genocide-khachkars
 
-On 9/27, Azerbaijan gov’t restrict access to the internet and reduced access to services such as Facebook, WhatsApp, Telegram, Twitter, and Skype. Azerbaijan has a long history of suppressing the free flow of information and silencing critical voices. 
+Mehriban Aliyeva was appointed as @UNESCO Goodwill Ambassador based on her promotion of international cultural exchanges. If only her concern for culture extended to the preservation of Armenian culture, now slowly being eradicated in Artsakh #StopAliyev #RecognizeArtsakh
 
-Azerbaijani people are not allowed to protest. The Azeri police arrested dozens of protesters rallying against the imprisonment of a high-profile opposition leader.`;
+@UNESCO must act urgently in accordance with its mission to promote the cultural heritage & equal dignity of all cultures & step in to ensure the preservation of historic Armenian sites in Artsakh, now at risk of destruction by Azerbaijan #StopAliyev
+
+@UNESCO Azerbaijan is attempting to erase the ancient Armenian heritage of Artsakh, claiming monasteries as their own #StopAliyev #RecognizeArtsakh
+
+Azerbaijan’s pattern of cultural genocide has been documented #StopAliyev #RecognizeArtsakh https://www.theguardian.com/artanddesign/2019/mar/01/monumental-loss-azerbaijan-cultural-genocide-khachkars
+
+Azerbaijan has consistently proven themselves intolerant to other cultures #RecognizeArtsakh #PreserveArtsakh https://www.theartnewspaper.com/news/monuments-in-line-of-fire-in-nagorno-karabakh-conflict?fbclid=IwAR0rosofC-QVA3i398cNoFedWZJAh5Wfh1gqD7KDHfPb4GpWpR_z3sGgkOw
+`;
 
 const factorySettings = {
   filterHash: false,
   addHash: true,
 }
 
-var tweetData = {
-  genre: "Turkish/Azeri Economy",
-  // hashtags: ` ${hashtags.stopAli} ${hashtags.azeriWar} `,
-  hashtags: [hashtags.sancTurk, hashtags.stopErd],
-  idx: 0,
+const hashtags = {
+  artStrong: "#ArtsakhStrong",
+  artIsArm: "#ArtsakhIsArmenia",
+  stopAli: "#StopAliyev",
+  stopErd: "#StopErdogan",
+  stopAzeri: "#StopAzerbaijaniAggression",
+  sancAzer: "#SanctionAzerbaijan",
+  sancTurk: "#SanctionTurkey",
+  recArt: "#RecognizeArtsakh",
+  peace: "#PeaceForArmenians",
+  believe: "#BelieveArmenia",
+  azeriLies: "#AzerbaijanLies",
+  azeriWar: "#AzeriWarCrimes",
+  warCrimes: "#WarCrimes",
+  drop: "#DropTurkey",
+  stop: "#StopTurkey",
+  space: "#SpaceX",
+  stopsat: "#StopTurksat5A",
+  telltruth: "#TellTheTruth",
+  nyt: "#NewYorkTimes",
+  fake: "#FakeNews",
+  preserve: "#PreserveArtsakh",
 };
 
-// console.log(rawTweets())
+var tweetData = {
+  genre: "preserve artsakh",
+  hashtags: [hashtags.sancTurk, hashtags.recArt],
+  idx: 0,
+};
 
 tweetifier(newTweets, tweetData);
